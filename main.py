@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, flash, send_file, url_for
+from flask import Flask, render_template, request, redirect, flash, send_file, url_for,jsonify
 import os
 from werkzeug.utils import secure_filename
 from PIL import ImageFont, ImageDraw, Image
+import subprocess
 
 app = Flask(__name__)
 app.secret_key = "i'm_bored"
@@ -73,5 +74,12 @@ def download():
     return send_file(app.root_path + download_path)
 
 
+@app.route("/breakout", methods=["POST","GET"])
+def breakout():
+    try:
+        subprocess.Popen(["python","breakout.py"])
+        return jsonify({"message":"app started successfully"})
+    except Exception :
+        return jsonify({"error":str(Exception)}), 500
 if __name__ == "__main__":
     app.run(debug=True)
